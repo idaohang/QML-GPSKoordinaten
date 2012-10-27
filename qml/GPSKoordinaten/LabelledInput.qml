@@ -2,22 +2,18 @@
 import QtQuick 1.1
 
 Rectangle {
-    signal characterModeChanged(string mode);
-
-//    Component.onCompleted: {
-//        characterModeChanged.connect(numberEdit.setCharacterMode)
-//    }
-
     property string labelText: "labelText"
     property string fontFamily: "Helvetica"
     property int fontSize: 40
     property int textInputWidth: 200
 
+//    property bool hasFocus: false // refac function?
     property bool textInputFocus: false
     property string charMode: "DigitMode"
 
-    color: "transparent"
+    signal characterModeChanged(string mode);
 
+    color: "transparent"
     width: 400
     height: 50
 
@@ -33,7 +29,6 @@ Rectangle {
 
             Rectangle { id: textInputRect
                 color: "transparent"
-
                 width: textInputWidth
                 height: 50
 
@@ -46,9 +41,11 @@ Rectangle {
                     onFocusChanged: {
                         if(focus){
                             textInputRect.border.color = "white"
+//                            hasFocus = true
                             characterModeChanged(charMode)
                         }else{
                             textInputRect.border.color = "transparent"
+//                            hasFocus = false
                         }
                     }
 

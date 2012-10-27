@@ -13,15 +13,6 @@ Rectangle { id: mainRect
     border.color: "grey"
     radius: 5
 
-    //    function setCharacterMode(mode) {
-    //        numberpad.setCharacterMode(mode)
-    //    }
-
-    //    Component.onCompleted: {
-    //        onCharacterModeChanged2: numberpad.setCharacterMode(mode)
-    //        var t = numberEdit.characterMode
-    //    }
-
     Rectangle {
         width: 800 // Refac: parent.width - border(20)
         height: 400
@@ -37,6 +28,9 @@ Rectangle { id: mainRect
         Numberpad { id: numberpad
             anchors.right: parent.right
             charMode: numberEdit.characterMode
+            Component.onCompleted: {
+                next.connect(inputFields.next)
+            }
         }
     }
 }

@@ -7,7 +7,6 @@ NumberEdit::NumberEdit(QObject *parent) :
 }
 
 QString NumberEdit::getCharacterMode() {
-    qDebug("get");
     return getCharacterMode(characterMode);
 }
 

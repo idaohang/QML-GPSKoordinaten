@@ -2,14 +2,43 @@
 import QtQuick 1.1
 
 Rectangle { id: mainRect
-    signal characterModeChanged(string mode);
-
     property string fontFamily: "Helvetica"
     property int space: 10
+
+    property bool inputAFocus: true
+    property bool inputBFocus: false
+    property bool inputCFocus: false
+    property bool inputDFocus: false
+
+    signal characterModeChanged(string mode);
 
     color: "transparent"
     width: 400
     height: 400
+
+    function next() {
+        var a = false
+        var b = false
+        var c = false
+        var d = false
+
+        if(inputA.textInputFocus)
+            b = true
+
+        if(inputB.textInputFocus)
+            c = true
+
+        if(inputC.textInputFocus)
+            d = true
+
+        if(inputD.textInputFocus)
+            a = true
+
+        inputAFocus = a
+        inputBFocus = b
+        inputCFocus = c
+        inputDFocus = d
+    }
 
     Column { id: mainColumn
         anchors.horizontalCenter: parent.horizontalCenter
@@ -36,33 +65,36 @@ Rectangle { id: mainRect
             }
         }
         Row {
-            LabelledInput {
+            LabelledInput { id: inputA
                 labelText: "Latitude:"
-                textInputFocus: true
+                textInputFocus: inputAFocus
                 Component.onCompleted: {
                     characterModeChanged.connect(mainRect.characterModeChanged)
                 }
             }
         }
         Row {
-            LabelledInput {
+            LabelledInput { id: inputB
                 labelText: "Longitude:"
+                textInputFocus: inputBFocus
                 Component.onCompleted: {
                     characterModeChanged.connect(mainRect.characterModeChanged)
                 }
             }
         }
         Row {
-            LabelledInput {
+            LabelledInput { id: inputC
                 labelText: "Altitude/ft:"
+                textInputFocus: inputCFocus
                 Component.onCompleted: {
                     characterModeChanged.connect(mainRect.characterModeChanged)
                 }
             }
         }
         Row {
-            LabelledInput {
+            LabelledInput { id: inputD
                 labelText: "Name:"
+                textInputFocus: inputDFocus
                 charMode: "LetterMode"
                 Component.onCompleted: {
                     characterModeChanged.connect(mainRect.characterModeChanged)

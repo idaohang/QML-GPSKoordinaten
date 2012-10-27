@@ -3,12 +3,12 @@ import QtQuick 1.1
 //import GpsGraphics 1.0
 
 Rectangle { id: mainRect
-
     property int space: 12
     property int buttonSize: calculateButtonSize(4, 10, space)
-    //    property string charState: "Digits"
-    //    property string charMode: "DigitMode"
     property string charMode: "DigitMode"
+
+    signal next()
+
     state: characterModeState(charMode)
 
     color: "transparent"
@@ -18,14 +18,6 @@ Rectangle { id: mainRect
     border.width: 1
     border.color: "grey"
     radius: 5
-
-    //    function setCharacterMode(mode) {
-    //        if(mode) {
-    //            mainRect.state = "LowerCaseLetters"
-    //        } else {
-    //            mainRect.state = "Digits"
-    //        }
-    //    }
 
     function characterModeState(mode) {
         if(mode === "DigitMode") {
@@ -41,10 +33,6 @@ Rectangle { id: mainRect
         var spacings = spacing * (buttonCount - 1)
         return (mainRect.width - spacings - (2 * border)) / buttonCount
     }
-
-//    Component.onCompleted: {
-//        mainRect.state: characterModeState(charMode)
-//    }
 
     Column { id: mainColumn
         anchors.horizontalCenter: parent.horizontalCenter
@@ -127,8 +115,7 @@ Rectangle { id: mainRect
                 width: buttonSize * 2 + space
                 height: buttonSize
                 onClicked: {
-                    //                    setCharacterMode(1)
-                    charMode = "LetterMode"
+                    mainRect.next()
                 }
             }
         }
@@ -140,25 +127,20 @@ Rectangle { id: mainRect
         State{ name: "Digits"
             StateChangeScript{ name: "switchToDigits"
                 script: {
-                    //padFrame.burronSize = padFrame.buttonHeight * 0.4
-
                     button00.buttonText = "1"
                     button01.buttonText = "2"
                     button02.buttonText = "3"
                     button03.buttonText = "<-"
-
 
                     button10.buttonText = "4"
                     button11.buttonText = "5"
                     button12.buttonText = "6"
                     button13.buttonText = "-"
 
-
                     button20.buttonText = "7"
                     button21.buttonText = "8"
                     button22.buttonText = "9"
                     button23.buttonText = "."
-
 
                     button30.buttonText = "*"
                     button31.buttonText = "0"
@@ -170,8 +152,6 @@ Rectangle { id: mainRect
         State{ name: "LowerCaseLetters"
             StateChangeScript { name: "switchToLowerCaseLetters"
                 script: {
-                    //padFrame.burronSize = padFrame.buttonHeight * 0.25
-
                     button00.buttonText = "1<br>.,?"
                     button01.buttonText = "2<br>abc"
                     button02.buttonText = "3<br>def"
