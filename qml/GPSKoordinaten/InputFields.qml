@@ -11,33 +11,52 @@ Rectangle { id: mainRect
     property bool inputDFocus: false
 
     signal characterModeChanged(string mode);
+    //    signal labelledInputClicked(int index)
 
     color: "transparent"
     width: 400
     height: 400
 
-    function next() {
+    function next(index) {
         var a = false
         var b = false
         var c = false
         var d = false
 
-        if(inputA.textInputFocus)
-            b = true
-
-        if(inputB.textInputFocus)
-            c = true
-
-        if(inputC.textInputFocus)
-            d = true
-
-        if(inputD.textInputFocus)
-            a = true
+        // 'index' und 'textInputFocus' muss getrennt behandelt werden!
+        if(index >= 0) {
+            if(index === 0) {
+                a = true
+            } else if(index === 1) {
+                b = true
+            } else if(index === 2) {
+                c = true
+            } else if(index === 3) {
+                d = true
+            }
+        } else {
+            if(inputA.textInputFocus) {
+                b = true
+            } else if(inputB.textInputFocus) {
+                c = true
+            } else if(inputC.textInputFocus) {
+                d = true
+            } else if(inputD.textInputFocus) {
+                a = true
+            }
+        }
 
         inputAFocus = a
         inputBFocus = b
         inputCFocus = c
         inputDFocus = d
+
+        console.log(index)
+        console.log(inputA.textInputFocus)
+        console.log(inputB.textInputFocus)
+        console.log(inputC.textInputFocus)
+        console.log(inputD.textInputFocus)
+        console.log("-------------------")
     }
 
     Column { id: mainColumn
@@ -71,6 +90,10 @@ Rectangle { id: mainRect
                 Component.onCompleted: {
                     characterModeChanged.connect(mainRect.characterModeChanged)
                 }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: { mainRect.next(0) }
+                }
             }
         }
         Row {
@@ -79,6 +102,10 @@ Rectangle { id: mainRect
                 textInputFocus: inputBFocus
                 Component.onCompleted: {
                     characterModeChanged.connect(mainRect.characterModeChanged)
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: { mainRect.next(1) }
                 }
             }
         }
@@ -89,6 +116,10 @@ Rectangle { id: mainRect
                 Component.onCompleted: {
                     characterModeChanged.connect(mainRect.characterModeChanged)
                 }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: { mainRect.next(2) }
+                }
             }
         }
         Row {
@@ -98,6 +129,10 @@ Rectangle { id: mainRect
                 charMode: "LetterMode"
                 Component.onCompleted: {
                     characterModeChanged.connect(mainRect.characterModeChanged)
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: { mainRect.next(3) }
                 }
             }
         }
