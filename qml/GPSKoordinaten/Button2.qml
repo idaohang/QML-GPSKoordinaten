@@ -1,11 +1,11 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-//import QtMobility.feedback 1.1
+//import QtMobility.feedback 1.1 // HapticsEffect
 
 Rectangle { id: mainRect
     property string buttonText: "buttonText"
-    property int fontSize: (mainRect.height > 0) ? mainRect.height * .4 : 20
     property string fontFamily: "Helvetica"
+    property int fontSize: (mainRect.height > 0) ? mainRect.height * .4 : 20
 
     signal clicked(string text)
 

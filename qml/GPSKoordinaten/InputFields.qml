@@ -11,7 +11,6 @@ Rectangle { id: mainRect
     property bool inputDFocus: false
 
     signal characterModeChanged(string mode);
-    //    signal labelledInputClicked(int index)
 
     color: "transparent"
     width: 400

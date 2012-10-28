@@ -8,6 +8,7 @@ Rectangle { id: mainRect
     property string charMode: "DigitMode"
 
     signal next()
+    signal buttonClicked(string text)
 
     state: characterModeState(charMode)
 
@@ -45,18 +46,30 @@ Rectangle { id: mainRect
             Button2 { id: button00
                 width: buttonSize
                 height: buttonSize
+                Component.onCompleted: {
+                    clicked.connect(mainRect.buttonClicked)
+                }
             }
             Button2 { id: button01
                 width: buttonSize
                 height: buttonSize
+                Component.onCompleted: {
+                    clicked.connect(mainRect.buttonClicked)
+                }
             }
             Button2 { id: button02
                 width: buttonSize
                 height: buttonSize
+                Component.onCompleted: {
+                    clicked.connect(mainRect.buttonClicked)
+                }
             }
             Button2 { id: button03
                 width: buttonSize
                 height: buttonSize
+                Component.onCompleted: {
+                    clicked.connect(mainRect.buttonClicked)
+                }
             }
         }
         Row {
@@ -64,18 +77,30 @@ Rectangle { id: mainRect
             Button2 { id: button10
                 width: buttonSize
                 height: buttonSize
+                Component.onCompleted: {
+                    clicked.connect(mainRect.buttonClicked)
+                }
             }
             Button2 { id: button11
                 width: buttonSize
                 height: buttonSize
+                Component.onCompleted: {
+                    clicked.connect(mainRect.buttonClicked)
+                }
             }
             Button2 { id: button12
                 width: buttonSize
                 height: buttonSize
+                Component.onCompleted: {
+                    clicked.connect(mainRect.buttonClicked)
+                }
             }
             Button2 { id: button13
                 width: buttonSize
                 height: buttonSize
+                Component.onCompleted: {
+                    clicked.connect(mainRect.buttonClicked)
+                }
             }
         }
         Row {
@@ -83,18 +108,30 @@ Rectangle { id: mainRect
             Button2 { id: button20
                 width: buttonSize
                 height: buttonSize
+                Component.onCompleted: {
+                    clicked.connect(mainRect.buttonClicked)
+                }
             }
             Button2 { id: button21
                 width: buttonSize
                 height: buttonSize
+                Component.onCompleted: {
+                    clicked.connect(mainRect.buttonClicked)
+                }
             }
             Button2 { id: button22
                 width: buttonSize
                 height: buttonSize
+                Component.onCompleted: {
+                    clicked.connect(mainRect.buttonClicked)
+                }
             }
             Button2 { id: button23
                 width: buttonSize
                 height: buttonSize
+                Component.onCompleted: {
+                    clicked.connect(mainRect.buttonClicked)
+                }
             }
         }
         Row {
@@ -102,14 +139,23 @@ Rectangle { id: mainRect
             Button2 { id: button30
                 width: buttonSize
                 height: buttonSize
+                Component.onCompleted: {
+                    clicked.connect(mainRect.buttonClicked)
+                }
             }
             Button2 { id: button31
                 width: buttonSize
                 height: buttonSize
+                Component.onCompleted: {
+                    clicked.connect(mainRect.buttonClicked)
+                }
             }
             Button2 { id: button32
                 width: 0
                 height: buttonSize
+                Component.onCompleted: {
+                    clicked.connect(mainRect.buttonClicked)
+                }
             }
             Button2 {  id: button33
                 width: buttonSize * 2 + space

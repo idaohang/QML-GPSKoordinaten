@@ -54,7 +54,7 @@ public slots:
     /**
       * Sets an validates text using addText().
       */
-    void setText(QString newVal);
+    void setText(QString text);
     /**
       * Retun a copy of text.
       */
@@ -63,7 +63,7 @@ public slots:
       * Add s to text and validate result.
       * If result would be invalid, nothing is added.
       */
-    void addText(const QString & s);
+    void addText(QString text);
 protected slots:
 private:
     CharacterMode getCharacterMode(QString mode) {

@@ -30,6 +30,7 @@ Rectangle { id: mainRect
             charMode: numberEdit.characterMode
             Component.onCompleted: {
                 next.connect(inputFields.next)
+                buttonClicked.connect(numberEdit.addText)
             }
         }
     }
