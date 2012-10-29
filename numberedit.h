@@ -15,8 +15,8 @@ class NumberEdit : public QObject
 {
     Q_OBJECT
     Q_ENUMS(CharacterMode)
-    Q_PROPERTY (QString editorText READ getText() WRITE setText())
-    Q_PROPERTY (QString characterMode READ getCharacterMode() WRITE setCharacterMode() NOTIFY characterModeChanged)
+    Q_PROPERTY (QString editorText READ getText() WRITE setText() NOTIFY textChanged())
+    Q_PROPERTY (QString characterMode READ getCharacterMode() WRITE setCharacterMode() NOTIFY characterModeChanged())
 
     // C++ Anbindung über Signals and Slots
     // Klassen müssen von QObject abgeleitet sein
@@ -42,6 +42,7 @@ signals: //NO const references for QML! Use copies!
     void editorTextChanged (QString text);
 
     void characterModeChanged();
+    void textChanged(QString text);
 public slots:
     /**
       * Get a string representation of charcterMode
@@ -58,7 +59,9 @@ public slots:
     /**
       * Retun a copy of text.
       */
-    QString getText(){return editorText + "_";} //for QML return a copy!
+    QString getText(){
+        return editorText; // + "_";
+    } //for QML return a copy!
     /**
       * Add s to text and validate result.
       * If result would be invalid, nothing is added.

@@ -21,6 +21,7 @@ Rectangle { id: mainRect
 
         InputFields { id: inputFields
             anchors.left: parent.left
+            activeText: numberEdit.editorText
             Component.onCompleted: {
                 characterModeChanged.connect(mainRect.characterModeChanged)
             }

@@ -21,14 +21,14 @@ void NumberEdit::setCharacterMode(QString mode) {
 }
 
 void NumberEdit::setText(QString text) {
-    QRegExp rx("_");
-    editorText = text.remove(rx);
+//    editorText = text.remove(QRegExp("_"));
+    editorText = text;
+    emit textChanged(editorText);
     qDebug(qPrintable(editorText));
 }
 
 void NumberEdit::addText(QString text) {
-    QRegExp rx("<br>");
-    text.remove(rx);
+    text.remove(QRegExp("<br>"));
 
     if(text.length() > 0) {
         if(text == "<-") {
@@ -68,5 +68,5 @@ void NumberEdit::addText(QString text) {
 
     lastKeyText = text;
     lastHitTime = QDateTime::currentDateTime();
-    qDebug("-----------");
+    qDebug("--------------------");
 }

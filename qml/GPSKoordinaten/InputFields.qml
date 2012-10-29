@@ -4,6 +4,8 @@ import QtQuick 1.1
 Rectangle { id: mainRect
     property string fontFamily: "Helvetica"
     property int space: 10
+    property string activeText: ""
+    property string text: setActiveText(activeText)
 
     property bool inputAFocus: true
     property bool inputBFocus: false
@@ -15,6 +17,19 @@ Rectangle { id: mainRect
     color: "transparent"
     width: 400
     height: 400
+
+    function setActiveText(text) {
+        if(inputA.textInputFocus) {
+            inputA.text = text
+        } else if(inputB.textInputFocus) {
+            inputB.text = text
+        } else if(inputC.textInputFocus) {
+            inputC.text = text
+        } else if(inputD.textInputFocus) {
+            inputD.text = text
+        }
+        return ""
+    }
 
     function next(index) {
         var a = false
@@ -55,7 +70,7 @@ Rectangle { id: mainRect
         console.log(inputB.textInputFocus)
         console.log(inputC.textInputFocus)
         console.log(inputD.textInputFocus)
-        console.log("-------------------")
+        console.log("--------------------")
     }
 
     Column { id: mainColumn

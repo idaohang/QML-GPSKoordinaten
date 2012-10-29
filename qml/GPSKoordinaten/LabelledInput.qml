@@ -1,11 +1,12 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 
-Rectangle {
+Rectangle { id: mainRect
     property string labelText: "labelText"
     property string fontFamily: "Helvetica"
     property int fontSize: 40
     property int textInputWidth: 200
+    property string text: ""
 
 //    property bool hasFocus: false // refac function?
     property bool textInputFocus: false
@@ -37,6 +38,7 @@ Rectangle {
                     width: textInputWidth
                     font.pixelSize: fontSize
                     focus: textInputFocus
+                    text: mainRect.text
 
                     onFocusChanged: {
                         if(focus){
