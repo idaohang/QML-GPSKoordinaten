@@ -27,34 +27,42 @@ void NumberEdit::setText(QString text) {
 }
 
 void NumberEdit::addText(QString text) {
-    QDateTime currentTime = QDateTime::currentDateTime();
-    uint diffTime = lastHitTime.time().msecsTo( currentTime.time() );
-    qDebug( "Time: %d", diffTime );
-
     QRegExp rx("<br>");
-    QString sign = "";
     text.remove(rx);
 
     if(text.length() > 0) {
-        if(MultipleHitTime >= diffTime && text == lastKeyText) {
-            qDebug("%s %s", qPrintable(text), qPrintable(lastKeyText));
-            if(keyHits + 1 == text.length()) {
-                keyHits = 0;
-            } else {
-                keyHits++;
-            }
-            qDebug("Hits: %d", keyHits);
-        } else {
-            keyHits = 0;
-        }
-
-        sign = text.at(keyHits);
-
-        if(sign == "<") {
+        if(text == "<-") {
             editorText.chop(1);
             setText(editorText);
         } else {
-            setText(editorText + sign);
+            QDateTime currentTime = QDateTime::currentDateTime();
+            uint diffTime = lastHitTime.time().msecsTo( currentTime.time() );
+            qDebug( "Time: %d", diffTime );
+
+            if( text.length() > 1  && MultipleHitTime >= diffTime && text == lastKeyText ) {
+                if( keyHits + 1 == text.length() ) {
+                    keyHits = 0;
+                } else {
+                    keyHits++;
+                }
+                if(text.at(keyHits) != 'Î')
+                    editorText.chop(1);
+            } else {
+                keyHits = 0;
+            }
+
+            qDebug("Hits: %d", keyHits);
+
+            if(text.at(keyHits) == 'Î') {
+                if(getCharacterMode() == getCharacterMode(LetterMode)) {
+                    setCharacterMode("");
+                } else {
+                    setCharacterMode(getCharacterMode(LetterMode));
+                }
+                setText(editorText);
+            } else {
+                setText(editorText + text.at(keyHits));
+            }
         }
     }
 
