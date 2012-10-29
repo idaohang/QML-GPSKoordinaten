@@ -13,6 +13,7 @@ Rectangle { id: mainRect
     property bool inputDFocus: false
 
     signal characterModeChanged(string mode);
+    signal textSelected(string text)
 
     color: "transparent"
     width: 400
@@ -28,7 +29,7 @@ Rectangle { id: mainRect
         } else if(inputD.textInputFocus) {
             inputD.text = text
         }
-        return ""
+        return text
     }
 
     function next(index) {
@@ -103,6 +104,7 @@ Rectangle { id: mainRect
                 textInputFocus: inputAFocus
                 Component.onCompleted: {
                     characterModeChanged.connect(mainRect.characterModeChanged)
+                    textSelected.connect(mainRect.textSelected)
                 }
                 MouseArea {
                     anchors.fill: parent
@@ -116,6 +118,7 @@ Rectangle { id: mainRect
                 textInputFocus: inputBFocus
                 Component.onCompleted: {
                     characterModeChanged.connect(mainRect.characterModeChanged)
+                    textSelected.connect(mainRect.textSelected)
                 }
                 MouseArea {
                     anchors.fill: parent
@@ -129,6 +132,7 @@ Rectangle { id: mainRect
                 textInputFocus: inputCFocus
                 Component.onCompleted: {
                     characterModeChanged.connect(mainRect.characterModeChanged)
+                    textSelected.connect(mainRect.textSelected)
                 }
                 MouseArea {
                     anchors.fill: parent
@@ -143,6 +147,7 @@ Rectangle { id: mainRect
                 charMode: "LetterMode"
                 Component.onCompleted: {
                     characterModeChanged.connect(mainRect.characterModeChanged)
+                    textSelected.connect(mainRect.textSelected)
                 }
                 MouseArea {
                     anchors.fill: parent

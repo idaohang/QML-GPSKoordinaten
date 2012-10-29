@@ -3,7 +3,8 @@ import QtQuick 1.1
 //import GpsGraphics 1.0
 
 Rectangle { id: mainRect
-    signal characterModeChanged(string mode);
+    signal characterModeChanged(string mode)
+    signal textSelected(string text)
 
     color: "black"
     width: 820
@@ -24,6 +25,7 @@ Rectangle { id: mainRect
             activeText: numberEdit.editorText
             Component.onCompleted: {
                 characterModeChanged.connect(mainRect.characterModeChanged)
+                textSelected.connect(mainRect.textSelected)
             }
         }
         Numberpad { id: numberpad

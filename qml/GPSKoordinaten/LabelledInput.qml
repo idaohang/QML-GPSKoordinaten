@@ -7,12 +7,11 @@ Rectangle { id: mainRect
     property int fontSize: 40
     property int textInputWidth: 200
     property string text: ""
-
-//    property bool hasFocus: false // refac function?
     property bool textInputFocus: false
     property string charMode: "DigitMode"
 
     signal characterModeChanged(string mode);
+    signal textSelected(string text)
 
     color: "transparent"
     width: 400
@@ -43,11 +42,10 @@ Rectangle { id: mainRect
                     onFocusChanged: {
                         if(focus){
                             textInputRect.border.color = "white"
-//                            hasFocus = true
                             characterModeChanged(charMode)
+                            textSelected(textInput.text)
                         }else{
                             textInputRect.border.color = "transparent"
-//                            hasFocus = false
                         }
                     }
 

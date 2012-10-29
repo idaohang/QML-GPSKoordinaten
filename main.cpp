@@ -27,6 +27,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     QObject *rootObject = dynamic_cast<QObject*>(viewer.rootObject()); // C++ connect
     QObject::connect(rootObject, SIGNAL(characterModeChanged(QString)), &numberEdit, SLOT(setCharacterMode(QString))); // C++ connect
+    QObject::connect(rootObject, SIGNAL(textSelected(QString)), &numberEdit, SLOT(setText(QString)));
 
     return app->exec();
 }
