@@ -14,6 +14,11 @@ Rectangle { id: mainRect
     border.color: "grey"
     radius: 5
 
+    Connections {
+        target: numberEdit
+        onTextChanged: inputFields.setActiveText(text)
+    }
+
     Rectangle {
         width: 800 // Refac: parent.width - border(20)
         height: 400
@@ -22,7 +27,7 @@ Rectangle { id: mainRect
 
         InputFields { id: inputFields
             anchors.left: parent.left
-            activeText: numberEdit.editorText
+//            activeText: numberEdit.editorText
             Component.onCompleted: {
                 characterModeChanged.connect(mainRect.characterModeChanged)
                 textSelected.connect(mainRect.textSelected)

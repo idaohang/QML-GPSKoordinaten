@@ -4,8 +4,6 @@ import QtQuick 1.1
 Rectangle { id: mainRect
     property string fontFamily: "Helvetica"
     property int space: 10
-    property string activeText: ""
-    property string text: setActiveText(activeText)
 
     property bool inputAFocus: true
     property bool inputBFocus: false

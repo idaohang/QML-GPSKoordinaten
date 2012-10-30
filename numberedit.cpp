@@ -45,7 +45,7 @@ void NumberEdit::addText(QString text) {
                 } else {
                     keyHits++;
                 }
-                if(text.at(keyHits) != 'Î')
+                if(text.at(keyHits) != 'Î') // Refac(Bug): delete * from first press
                     editorText.chop(1);
             } else {
                 keyHits = 0;

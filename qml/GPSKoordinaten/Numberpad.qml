@@ -5,7 +5,7 @@ import QtQuick 1.1
 Rectangle { id: mainRect
     property int space: 12
     property int buttonSize: calculateButtonSize(4, 10, space)
-    property string charMode: "DigitMode"
+    property string charMode: "DigitMode" // Refac: Function
 
     signal next()
     signal buttonClicked(string text)
