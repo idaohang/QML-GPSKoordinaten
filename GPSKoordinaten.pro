@@ -22,7 +22,8 @@ symbian:TARGET.CAPABILITY += NetworkServices
 # lines and add the respective components to the MOBILITY variable.
 #CONFIG += qt-components
 CONFIG += mobility
-MOBILITY = feedback
+MOBILITY += feedback
+MOBILITY += location
 
 # Speed up launching on MeeGo/Harmattan when using applauncherd daemon
 # CONFIG += qdeclarative-boostable
@@ -32,14 +33,16 @@ MOBILITY = feedback
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
-    numberedit.cpp
+    numberedit.cpp \
+#    gpstools.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
 qtcAddDeployment()
 
 HEADERS += \
-    numberedit.h
+    numberedit.h \
+#    gpstools.h
 
 OTHER_FILES += \
     qtc_packaging/debian_harmattan/rules \

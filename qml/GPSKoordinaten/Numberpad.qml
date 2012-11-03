@@ -5,7 +5,7 @@ import QtQuick 1.1
 Rectangle { id: mainRect
     property int space: 12
     property int buttonSize: calculateButtonSize(4, 10, space)
-    property string charMode: "DigitMode" // Refac: Function
+    property string charMode: "DigitMode"
 
     signal next()
     signal buttonClicked(string text)
@@ -19,6 +19,22 @@ Rectangle { id: mainRect
     border.width: 1
     border.color: "grey"
     radius: 5
+
+    function nextButtonWidth() {
+        if(state == "Digits") {
+            return buttonSize * 2 + space
+        } else {
+            return buttonSize
+        }
+    }
+
+    function numberSignButtonWidth() {
+        if(state == "Digits") {
+            return 0
+        } else {
+            return buttonSize
+        }
+    }
 
     function characterModeState(mode) {
         if(mode === "DigitMode") {
@@ -151,14 +167,14 @@ Rectangle { id: mainRect
                 }
             }
             Button2 { id: button32
-                width: 0
+                width: numberSignButtonWidth()
                 height: buttonSize
                 Component.onCompleted: {
                     clicked.connect(mainRect.buttonClicked)
                 }
             }
             Button2 {  id: button33
-                width: buttonSize * 2 + space
+                width: nextButtonWidth()
                 height: buttonSize
                 onClicked: {
                     mainRect.next()
@@ -191,9 +207,7 @@ Rectangle { id: mainRect
                     button30.buttonText = "*"
                     button31.buttonText = "0"
                     button32.buttonText = ""
-                    button32.width = 0
                     button33.buttonText = "Next"
-                    button33.width = buttonSize * 2 + space
                 }}},
         State{ name: "LowerCaseLetters"
             StateChangeScript { name: "switchToLowerCaseLetters"
@@ -216,9 +230,7 @@ Rectangle { id: mainRect
                     button30.buttonText = "*<br>Î"
                     button31.buttonText = "0<br>+"
                     button32.buttonText = "#"
-                    button32.width = buttonSize
                     button33.buttonText = "Next"
-                    button33.width = buttonSize
                 }}},
         State{ name: "UpperCaseLetters"
             StateChangeScript{ name: "switchToUpperCaseLetters"
@@ -241,9 +253,7 @@ Rectangle { id: mainRect
                     button30.buttonText = "*<br>Î"
                     button31.buttonText = "0<br>+"
                     button32.buttonText = "#"
-                    button32.width = buttonSize
                     button33.buttonText = "Next"
-                    button33.width = buttonSize
                 }}}
     ]
 }
