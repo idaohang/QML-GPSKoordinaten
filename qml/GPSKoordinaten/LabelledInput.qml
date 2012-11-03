@@ -5,7 +5,7 @@ Rectangle { id: mainRect
     property string labelText: "labelText"
     property string fontFamily: "Helvetica"
     property int fontSize: 40
-    property int textInputWidth: 200
+    property int textInputWidth: width / 2 // 200
     property string text: ""
     property bool textInputFocus: false
     property string charMode: "DigitMode"
@@ -19,22 +19,22 @@ Rectangle { id: mainRect
 
     Column {
         Row {
-            Text {
+            Text { id: label
                 color: "white"
                 text: labelText
                 font.pixelSize: fontSize
                 font.family: fontFamily
-                width: 200 - 12 // refac: border
+//                width: textInputWidth - 12 // refac: border
             }
 
             Rectangle { id: textInputRect
                 color: "transparent"
-                width: textInputWidth
-                height: 50
+                width: mainRect.width - label.width - 12
+                height: mainRect.height
 
                 TextInput { id: textInput
                     color: "white"
-                    width: textInputWidth
+                    width: mainRect.width - label.width - 12
                     font.pixelSize: fontSize
                     focus: textInputFocus
                     text: mainRect.text

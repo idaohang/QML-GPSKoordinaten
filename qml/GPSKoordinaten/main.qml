@@ -22,7 +22,7 @@ Rectangle { id: mainRect
     }
 
     Rectangle { id: centerRect
-        width: mainRect.width - mainBorder // Refac: parent.width - border(20)
+        width: mainRect.width - mainBorder
         height: mainRect.height - mainBorder
         anchors.centerIn: parent
         color: "transparent"
@@ -36,6 +36,8 @@ Rectangle { id: mainRect
 
         InputFields { id: inputFields
             anchors.left: parent.left
+            width: centerRect.width - centerRect.height
+            height: centerRect.height
             Component.onCompleted: {
                 characterModeChanged.connect(mainRect.characterModeChanged)
                 textSelected.connect(mainRect.textSelected)

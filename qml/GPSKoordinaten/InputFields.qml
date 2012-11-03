@@ -10,6 +10,9 @@ Rectangle { id: mainRect
     property bool inputCFocus: false
     property bool inputDFocus: false
 
+    property double widthPercentage: width / 400
+    property double heightPercentage: height / 400
+
     signal characterModeChanged(string mode);
     signal textSelected(string text)
 
@@ -27,7 +30,6 @@ Rectangle { id: mainRect
         } else if(inputD.textInputFocus) {
             inputD.text = text
         }
-        return text
     }
 
     function next(index) {
@@ -72,6 +74,10 @@ Rectangle { id: mainRect
         console.log("--------------------")
     }
 
+    function buttonSize() {
+        return 100 * (heightPercentage < widthPercentage ? heightPercentage : widthPercentage)
+    }
+
     Column { id: mainColumn
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
@@ -82,8 +88,8 @@ Rectangle { id: mainRect
             Rectangle {
                 color: "white"
 
-                width: 390
-                height: 50
+                width: 390 * widthPercentage
+                height: 50 * heightPercentage
 
                 radius: 10.0
 
@@ -91,13 +97,17 @@ Rectangle { id: mainRect
                     color: "black"
                     text: "Waypoint Coordinates"
                     anchors.centerIn: parent
-                    font.pixelSize: 40
+                    font.pixelSize: 38 * heightPercentage // 40 without heightPercentage
                     font.family: fontFamily
                 }
             }
         }
         Row {
             LabelledInput { id: inputA
+                width: 400 * widthPercentage
+                height: 50 * heightPercentage
+                fontSize: 40 * heightPercentage
+
                 labelText: "Latitude:"
                 textInputFocus: inputAFocus
                 Component.onCompleted: {
@@ -112,6 +122,10 @@ Rectangle { id: mainRect
         }
         Row {
             LabelledInput { id: inputB
+                width: 400 * widthPercentage
+                height: 50 * heightPercentage
+                fontSize: 40 * heightPercentage
+
                 labelText: "Longitude:"
                 textInputFocus: inputBFocus
                 Component.onCompleted: {
@@ -126,6 +140,10 @@ Rectangle { id: mainRect
         }
         Row {
             LabelledInput { id: inputC
+                width: 400 * widthPercentage
+                height: 50 * heightPercentage
+                fontSize: 40 * heightPercentage
+
                 labelText: "Altitude/ft:"
                 textInputFocus: inputCFocus
                 Component.onCompleted: {
@@ -140,6 +158,10 @@ Rectangle { id: mainRect
         }
         Row {
             LabelledInput { id: inputD
+                width: 400 * widthPercentage
+                height: 50 * heightPercentage
+                fontSize: 40 * heightPercentage
+
                 labelText: "Name:"
                 textInputFocus: inputDFocus
                 charMode: "LetterMode"
@@ -156,9 +178,15 @@ Rectangle { id: mainRect
         Row {
             spacing: space
             Button2 {
+                width: buttonSize()
+                height: buttonSize()
+
                 buttonText: "<="
             }
             Button2 {
+                width: buttonSize()
+                height: buttonSize()
+
                 buttonText: "OK"
             }
         }
