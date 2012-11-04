@@ -37,7 +37,7 @@ Rectangle { id: mainRect
             }
             Rectangle { id: textInputRect
                 color: "transparent"
-                width: mainRect.width - labelRect.width - 12
+                width: mainRect.width - labelRect.width - 12 // 12 is left border
                 height: mainRect.height
 
                 TextInput { id: textInput

@@ -34,7 +34,9 @@ MOBILITY += location
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
     numberedit.cpp \
-#    gpstools.cpp
+    gpstracker.cpp \
+    point.cpp \
+    pointmodel.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -42,7 +44,9 @@ qtcAddDeployment()
 
 HEADERS += \
     numberedit.h \
-#    gpstools.h
+    gpstracker.h \
+    point.h \
+    pointmodel.h
 
 OTHER_FILES += \
     qtc_packaging/debian_harmattan/rules \
