@@ -78,6 +78,19 @@ Rectangle { id: mainRect
         return 100 * (heightPercentage < widthPercentage ? heightPercentage : widthPercentage)
     }
 
+    function getMaxLabelWidth() {
+        var max = 0;
+        if(inputA.getLabelWidth() > max)
+            max = inputA.getLabelWidth()
+        if(inputB.getLabelWidth() > max)
+            max = inputB.getLabelWidth()
+        if(inputC.getLabelWidth() > max)
+            max = inputC.getLabelWidth()
+        if(inputD.getLabelWidth() > max)
+            max = inputD.getLabelWidth()
+        return max
+    }
+
     Column { id: mainColumn
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
@@ -87,11 +100,10 @@ Rectangle { id: mainRect
         Row {
             Rectangle {
                 color: "white"
+                radius: 10.0
 
                 width: 390 * widthPercentage
                 height: 50 * heightPercentage
-
-                radius: 10.0
 
                 Text {
                     color: "black"
@@ -104,9 +116,11 @@ Rectangle { id: mainRect
         }
         Row {
             LabelledInput { id: inputA
-                width: 400 * widthPercentage
-                height: 50 * heightPercentage
+                width:   400 * widthPercentage
+                height:   50 * heightPercentage
                 fontSize: 40 * heightPercentage
+
+                labelRectWidth: getMaxLabelWidth(width)
 
                 labelText: "Latitude:"
                 textInputFocus: inputAFocus
@@ -122,9 +136,11 @@ Rectangle { id: mainRect
         }
         Row {
             LabelledInput { id: inputB
-                width: 400 * widthPercentage
-                height: 50 * heightPercentage
+                width:   400 * widthPercentage
+                height:   50 * heightPercentage
                 fontSize: 40 * heightPercentage
+
+                labelRectWidth: getMaxLabelWidth(width)
 
                 labelText: "Longitude:"
                 textInputFocus: inputBFocus
@@ -140,9 +156,11 @@ Rectangle { id: mainRect
         }
         Row {
             LabelledInput { id: inputC
-                width: 400 * widthPercentage
-                height: 50 * heightPercentage
+                width:   400 * widthPercentage
+                height:   50 * heightPercentage
                 fontSize: 40 * heightPercentage
+
+                labelRectWidth: getMaxLabelWidth(width)
 
                 labelText: "Altitude/ft:"
                 textInputFocus: inputCFocus
@@ -158,9 +176,11 @@ Rectangle { id: mainRect
         }
         Row {
             LabelledInput { id: inputD
-                width: 400 * widthPercentage
-                height: 50 * heightPercentage
+                width:   400 * widthPercentage
+                height:   50 * heightPercentage
                 fontSize: 40 * heightPercentage
+
+                labelRectWidth: getMaxLabelWidth(width)
 
                 labelText: "Name:"
                 textInputFocus: inputDFocus

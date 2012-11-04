@@ -5,7 +5,7 @@ Rectangle { id: mainRect
     property string labelText: "labelText"
     property string fontFamily: "Helvetica"
     property int fontSize: 40
-    property int textInputWidth: width / 2 // 200
+    property int labelRectWidth: 0
     property string text: ""
     property bool textInputFocus: false
     property string charMode: "DigitMode"
@@ -17,24 +17,32 @@ Rectangle { id: mainRect
     width: 400
     height: 50
 
+    function getLabelWidth() {
+        return label.width
+    }
+
     Column {
         Row {
-            Text { id: label
-                color: "white"
-                text: labelText
-                font.pixelSize: fontSize
-                font.family: fontFamily
-//                width: textInputWidth - 12 // refac: border
-            }
+            Rectangle { id: labelRect
+                width: labelRectWidth
+                height: mainRect.height
+                color: "transparent"
 
+                Text { id: label
+                    color: "white"
+                    text: labelText
+                    font.pixelSize: fontSize
+                    font.family: fontFamily
+                }
+            }
             Rectangle { id: textInputRect
                 color: "transparent"
-                width: mainRect.width - label.width - 12
+                width: mainRect.width - labelRect.width - 12
                 height: mainRect.height
 
                 TextInput { id: textInput
                     color: "white"
-                    width: mainRect.width - label.width - 12
+                    width: mainRect.width - labelRect.width - 12
                     font.pixelSize: fontSize
                     focus: textInputFocus
                     text: mainRect.text

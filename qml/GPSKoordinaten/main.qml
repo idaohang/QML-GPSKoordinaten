@@ -27,13 +27,6 @@ Rectangle { id: mainRect
         anchors.centerIn: parent
         color: "transparent"
 
-        function debug(value) {
-            console.log(value)
-            return 0
-        }
-        property int w: debug(width)
-        property int h: debug(height)
-
         InputFields { id: inputFields
             anchors.left: parent.left
             width: centerRect.width - centerRect.height
