@@ -47,4 +47,8 @@ Rectangle { id: mainRect
             }
         }
     }
+
+    MapView {
+
+    }
 }
