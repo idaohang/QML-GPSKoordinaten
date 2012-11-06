@@ -94,6 +94,23 @@ void GPSTracker::addPosition(QGeoPositionInfo position) {
     if(points.rowCount() > 0){
         if(!points.last().equals(point)) {
             points.addPoint(point);
+            qDebug("Altitude");
+            qDebug(qPrintable(QString::number(point.getAltitude())));
+            qDebug("Latitude");
+            qDebug(qPrintable(QString::number(point.getLatitude())));
+            qDebug("Longitude");
+            qDebug(qPrintable(QString::number(point.getLongitude())));
+
+            Point point = points.last();
+            // WGS84:
+            qDebug("WGS84");
+            qDebug(qPrintable(point.text()));
+            // ECEF:
+            qDebug("ECEF");
+            qDebug(qPrintable(Point::WGS2ECEF(point).text()));
+            // ENU:
+            qDebug("ENU");
+            qDebug(qPrintable(Point::WGS2ENU(points.first(), point).text()));
         }
     } else {
         points.addPoint(point);

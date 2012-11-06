@@ -40,7 +40,7 @@ Rectangle { id: mainRect
             anchors.right: parent.right
             width: centerRect.height
             height: centerRect.height
-            charMode: numberEdit.characterMode
+            charMode: numberEdit.characterMode // Refac: Function?
             Component.onCompleted: {
                 next.connect(inputFields.next)
                 buttonClicked.connect(numberEdit.addText)

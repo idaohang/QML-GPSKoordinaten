@@ -17,6 +17,8 @@ public:
 
     Point &last() {return points.last();}
 
+    Point &first() {return points.first();}
+
     void setFormat(Point::GPSFormat format) {
         this->format = format;
     }

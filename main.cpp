@@ -30,7 +30,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QObject::connect(rootObject, SIGNAL(characterModeChanged(QString)), &numberEdit, SLOT(setCharacterMode(QString))); // C++ connect
     QObject::connect(rootObject, SIGNAL(textSelected(QString)), &numberEdit, SLOT(setText(QString)));
 
-
+    GPSTracker gpsTracker;
+    gpsTracker.startGPS();
+    gpsTracker.startTracking();
 
     return app->exec();
 }
