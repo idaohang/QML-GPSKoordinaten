@@ -63,7 +63,7 @@ Rectangle { id: mainRect
         Text {
             color: "black"
             text: meter + "m"
-            x: mainRect.width / 2 - 10
+            x: mainRect.width - lineLength - 10
             y: mainRect.height - 35
         }
 
@@ -71,7 +71,7 @@ Rectangle { id: mainRect
             color: "black"
             width: lineLength
             height: 4
-            x: mainRect.width / 2 - 10
+            x: mainRect.width - lineLength - 10
             y: mainRect.height - 10
         }
     }
@@ -104,6 +104,7 @@ Rectangle { id: mainRect
         var pixelPerMeter = screenDistance / coordDistance
         console.log("pixelPerMeter: " + pixelPerMeter)
         meter = mainRect.width / 2 / pixelPerMeter
+        meter = meter - (meter % 100)
         lineLength = pixelPerMeter * meter
         console.log("lineLength: " + lineLength)
     }
