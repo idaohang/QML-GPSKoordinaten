@@ -4,6 +4,7 @@ import QtMobility.location 1.2
 
 // http://qt-project.org/wiki/QML_Maps_with_Pinch_Zoom
 // http://harmattan-dev.nokia.com/docs/library/html/guide/html/Developer_Library_Developing_for_Harmattan_Using_location_and_maps_in_applications_Example_of_displaying_location_data_and_a_map_in_your_application.html
+// http://doc.qt.digia.com/qtmobility/qml-location-plugin.html
 
 Rectangle { id: mainRect
     color: "black"
@@ -13,25 +14,36 @@ Rectangle { id: mainRect
     // Iserlohn - Germany
     property double latitude: 51.381111
     property double longitude: 7.695556
-    property int  defaultZoomLevel: 15
+    property int zoomLevel: 15
+    property double mapCircleRadius: (mainRect.width > mainRect.height ? mainRect.width : mainRect.height) * 0.05
+
+    function distance(xA, yA, xB, yB) {
+        var xD = xB - xA
+        var yD = yB - yA
+        return Math.sqrt(xD * xD + yD * yD)
+    }
 
     //! We stop retrieving position information when component is to be destroyed
-    Component.onDestruction: positionSource.stop();
+    Component.onDestruction: positionSource.stop()
 
     //! Check if application is active, stop position updates if not
     Connections {
         target: Qt.application
         onActiveChanged: {
-            if (Qt.application.active)
-                positionSource.start();
-            else
-                positionSource.stop();
+            if (Qt.application.active) {
+                var currentCoord = positionSource.position.coordinate
+                currentCoord.latitude = mainRect.latitude
+                currentCoord.longitude = mainRect.longitude
+                positionSource.start()
+                updateGeoInfo()
+            } else
+                positionSource.stop()
         }
     }
 
     Map { id: map
         plugin: Plugin { name: "nokia" }
-        zoomLevel: mainRect.defaultZoomLevel
+        zoomLevel: mainRect.zoomLevel
         mapType: Map.StreetMap
         anchors.fill: parent
 
@@ -40,13 +52,10 @@ Rectangle { id: mainRect
             longitude: mainRect.longitude
         }
 
-        Rectangle { id: mapPlacer
-            width: 20
-            height: width
+        MapCircle { id: positionMarke
+            center: positionSource.position.coordinate
+            radius: mapCircleRadius
             color: "red"
-            border.color: "black"
-            border.width: 1
-            radius: width*0.5
         }
     }
 
@@ -67,7 +76,29 @@ Rectangle { id: mainRect
         var currentCoord = positionSource.position.coordinate
         latitude = currentCoord.latitude
         longitude = currentCoord.longitude
+
+        var coordDistance = coordA.distanceTo(coordB)
+        console.log("coordDistance: " + coordDistance) // **
+        var screenDistance = distance(map.toScreenPosition(coordA).x,
+                                      map.toScreenPosition(coordA).y,
+                                      map.toScreenPosition(coordB).x,
+                                      map.toScreenPosition(coordB).y)
+        console.log("screenDistance: " + screenDistance)
+        var pixelPerMeter = screenDistance / coordDistance
+        console.log("pixelPerMeter: " + pixelPerMeter)
+        console.log("200mInPixel: " + pixelPerMeter * 200)
     }
+
+    Coordinate { id: coordA
+        latitude: 10.0
+        longitude: 0.0
+    }
+
+    Coordinate { id: coordB
+        latitude: 20.0
+        longitude: 0.0
+    }
+
 
     PinchArea { id: pincharea
         property double __oldZoom
@@ -84,6 +115,7 @@ Rectangle { id: mainRect
 
         onPinchUpdated: {
             map.zoomLevel = calcZoomDelta(__oldZoom, pinch.scale)
+            updateGeoInfo()
         }
 
         onPinchFinished: {
@@ -119,7 +151,7 @@ Rectangle { id: mainRect
         }
 
         onCanceled: {
-            __isPanning = false;
+            __isPanning = false
         }
     }
 }

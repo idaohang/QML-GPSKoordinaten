@@ -49,6 +49,7 @@ Rectangle { id: mainRect
     }
 
     MapView {
-
+        width: mainRect.width
+        height: mainRect.height
     }
 }
