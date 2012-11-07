@@ -16,6 +16,8 @@ Rectangle { id: mainRect
     property double longitude: 7.695556
     property int zoomLevel: 15
     property double mapCircleRadius: (mainRect.width > mainRect.height ? mainRect.width : mainRect.height) * 0.05
+    property int meter: 0
+    property double lineLength: 0
 
     function distance(xA, yA, xB, yB) {
         var xD = xB - xA
@@ -34,8 +36,8 @@ Rectangle { id: mainRect
                 var currentCoord = positionSource.position.coordinate
                 currentCoord.latitude = mainRect.latitude
                 currentCoord.longitude = mainRect.longitude
-                positionSource.start()
                 updateGeoInfo()
+                positionSource.start()
             } else
                 positionSource.stop()
         }
@@ -56,6 +58,21 @@ Rectangle { id: mainRect
             center: positionSource.position.coordinate
             radius: mapCircleRadius
             color: "red"
+        }
+
+        Text {
+            color: "black"
+            text: meter + "m"
+            x: mainRect.width / 2 - 10
+            y: mainRect.height - 35
+        }
+
+        Rectangle {
+            color: "black"
+            width: lineLength
+            height: 4
+            x: mainRect.width / 2 - 10
+            y: mainRect.height - 10
         }
     }
 
@@ -86,7 +103,9 @@ Rectangle { id: mainRect
         console.log("screenDistance: " + screenDistance)
         var pixelPerMeter = screenDistance / coordDistance
         console.log("pixelPerMeter: " + pixelPerMeter)
-        console.log("200mInPixel: " + pixelPerMeter * 200)
+        meter = mainRect.width / 2 / pixelPerMeter
+        lineLength = pixelPerMeter * meter
+        console.log("lineLength: " + lineLength)
     }
 
     Coordinate { id: coordA
