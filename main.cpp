@@ -8,7 +8,7 @@
 //#include <QDeclarativeContext>
 
 #include "numberedit.h"
-#include "gpstracker.h"
+//#include "gpstracker.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -30,9 +30,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QObject::connect(rootObject, SIGNAL(characterModeChanged(QString)), &numberEdit, SLOT(setCharacterMode(QString))); // C++ connect
     QObject::connect(rootObject, SIGNAL(textSelected(QString)), &numberEdit, SLOT(setText(QString)));
 
-    GPSTracker gpsTracker;
-    gpsTracker.startGPS();
-    gpsTracker.startTracking();
+//    GPSTracker gpsTracker;
+//    gpsTracker.startGPS();
+//    gpsTracker.startTracking();
 
     return app->exec();
 }
