@@ -15,9 +15,14 @@ Rectangle { id: mainRect
     property double latitude: 51.381111
     property double longitude: 7.695556
     property int zoomLevel: 15
-    property double mapCircleRadius: (mainRect.width > mainRect.height ? mainRect.width : mainRect.height) * 0.05
+    property double mapCircleRadius: (pixelPerMeter > 0 ? meterSizeOfPixel(10) : 0 ) // (mainRect.width > mainRect.height ? mainRect.width : mainRect.height) * 0.05
     property int meter: 0
     property double lineLength: 0
+    property double pixelPerMeter: 0
+
+    function meterSizeOfPixel(pixel) {
+        return (6.5 / 10) * pixel / pixelPerMeter
+    }
 
     function distance(xA, yA, xB, yB) {
         var xD = xB - xA
@@ -60,6 +65,17 @@ Rectangle { id: mainRect
             color: "red"
         }
 
+        Rectangle {
+             width: 20
+             height: width
+             color: "transparent"
+             border.color: "black"
+             border.width: 1
+             radius: width * 0.5
+//             x: map.toScreenPosition(positionSource.position.coordinate).x - 10
+//             y: map.toScreenPosition(positionSource.position.coordinate).y - 10
+        }
+
         Text {
             color: "black"
             text: meter + "m"
@@ -95,15 +111,15 @@ Rectangle { id: mainRect
         longitude = currentCoord.longitude
 
         var coordDistance = coordA.distanceTo(coordB)
-        console.log("coordDistance: " + coordDistance) // **
+        console.log("coordDistance: " + coordDistance)
         var screenDistance = distance(map.toScreenPosition(coordA).x,
                                       map.toScreenPosition(coordA).y,
                                       map.toScreenPosition(coordB).x,
                                       map.toScreenPosition(coordB).y)
         console.log("screenDistance: " + screenDistance)
-        var pixelPerMeter = screenDistance / coordDistance
+        pixelPerMeter = screenDistance / coordDistance
         console.log("pixelPerMeter: " + pixelPerMeter)
-        meter = mainRect.width / 2 / pixelPerMeter
+        meter = (mainRect.width / 2.0) / pixelPerMeter
         meter = meter - (meter % 100)
         lineLength = pixelPerMeter * meter
         console.log("lineLength: " + lineLength)
