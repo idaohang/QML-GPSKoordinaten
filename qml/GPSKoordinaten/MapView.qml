@@ -12,22 +12,24 @@ Rectangle { id: mainRect
     height: 400
 
     // Iserlohn - Germany
-    property double latitude: 51.381111
-    property double longitude: 7.695556
+    property double centerLatitude: 51.381111
+    property double centerLongitude: 7.695556
     property int zoomLevel: 15
-    property double mapCircleRadius: (pixelPerMeter > 0 ? meterSizeOfPixel(10) : 0 ) // (mainRect.width > mainRect.height ? mainRect.width : mainRect.height) * 0.05
     property int meter: 0
     property double lineLength: 0
-    property double pixelPerMeter: 0
 
-    function meterSizeOfPixel(pixel) {
-        return (6.5 / 10) * pixel / pixelPerMeter
-    }
+    property int currentPositionX: 0
+    property int currentPositionY: 0
 
     function distance(xA, yA, xB, yB) {
         var xD = xB - xA
         var yD = yB - yA
         return Math.sqrt(xD * xD + yD * yD)
+    }
+
+    function adjustPositions() {
+        currentPositionX = map.toScreenPosition(positionSource.position.coordinate).x
+        currentPositionY = map.toScreenPosition(positionSource.position.coordinate).y
     }
 
     //! We stop retrieving position information when component is to be destroyed
@@ -39,9 +41,9 @@ Rectangle { id: mainRect
         onActiveChanged: {
             if (Qt.application.active) {
                 var currentCoord = positionSource.position.coordinate
-                currentCoord.latitude = mainRect.latitude
-                currentCoord.longitude = mainRect.longitude
-                updateGeoInfo()
+                currentCoord.latitude = mainRect.centerLatitude
+                currentCoord.longitude = mainRect.centerLongitude
+                adjustPositions()
                 positionSource.start()
             } else
                 positionSource.stop()
@@ -55,25 +57,19 @@ Rectangle { id: mainRect
         anchors.fill: parent
 
         center: Coordinate {
-            latitude: mainRect.latitude
-            longitude: mainRect.longitude
-        }
-
-        MapCircle { id: positionMarke
-            center: positionSource.position.coordinate
-            radius: mapCircleRadius
-            color: "red"
+            latitude: mainRect.centerLatitude
+            longitude: mainRect.centerLongitude
         }
 
         Rectangle {
-             width: 20
-             height: width
-             color: "transparent"
-             border.color: "black"
-             border.width: 1
-             radius: width * 0.5
-//             x: map.toScreenPosition(positionSource.position.coordinate).x - 10
-//             y: map.toScreenPosition(positionSource.position.coordinate).y - 10
+            width: 20
+            height: width
+            color: "red"
+            border.color: "black"
+            border.width: 1
+            radius: width * 0.5
+            x: currentPositionX
+            y: currentPositionY
         }
 
         Text {
@@ -107,8 +103,8 @@ Rectangle { id: mainRect
 
     function updateGeoInfo() {
         var currentCoord = positionSource.position.coordinate
-        latitude = currentCoord.latitude
-        longitude = currentCoord.longitude
+        centerLatitude = currentCoord.latitude
+        centerLongitude = currentCoord.longitude
 
         var coordDistance = coordA.distanceTo(coordB)
         console.log("coordDistance: " + coordDistance)
@@ -117,7 +113,7 @@ Rectangle { id: mainRect
                                       map.toScreenPosition(coordB).x,
                                       map.toScreenPosition(coordB).y)
         console.log("screenDistance: " + screenDistance)
-        pixelPerMeter = screenDistance / coordDistance
+        var pixelPerMeter = screenDistance / coordDistance
         console.log("pixelPerMeter: " + pixelPerMeter)
         meter = (mainRect.width / 2.0) / pixelPerMeter
         meter = meter - (meter % 100)
@@ -128,11 +124,13 @@ Rectangle { id: mainRect
     Coordinate { id: coordA
         latitude: 10.0
         longitude: 0.0
+        altitude: 0.0
     }
 
     Coordinate { id: coordB
-        latitude: 20.0
+        latitude: 10.002
         longitude: 0.0
+        altitude: 0.0
     }
 
 
@@ -151,7 +149,7 @@ Rectangle { id: mainRect
 
         onPinchUpdated: {
             map.zoomLevel = calcZoomDelta(__oldZoom, pinch.scale)
-            updateGeoInfo()
+            adjustPositions()
         }
 
         onPinchFinished: {
@@ -184,6 +182,7 @@ Rectangle { id: mainRect
                 __lastX = mouse.x
                 __lastY = mouse.y
             }
+            adjustPositions()
         }
 
         onCanceled: {
