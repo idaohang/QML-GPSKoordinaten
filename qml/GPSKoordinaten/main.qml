@@ -4,6 +4,7 @@ import QtQuick 1.1
 
 Rectangle { id: mainRect
     property int mainBorder: 20
+    property bool mapVisibility: true
 
     signal characterModeChanged(string mode)
     signal textSelected(string text)
@@ -34,6 +35,8 @@ Rectangle { id: mainRect
             Component.onCompleted: {
                 characterModeChanged.connect(mainRect.characterModeChanged)
                 textSelected.connect(mainRect.textSelected)
+                back.connect(mainRect.back)
+                ok.connect(mainRect.ok)
             }
         }
         Numberpad { id: numberpad
@@ -48,8 +51,27 @@ Rectangle { id: mainRect
         }
     }
 
-    MapView {
+    function target(latitude, longitude, altitude) {
+        inputFields.setTextFields(latitude, longitude, altitude, "")
+        mapVisibility = false
+    }
+
+    function back() {
+        mapVisibility = true
+    }
+
+    function ok(latitude, longitude, altitude, name) {
+        mapView.setTarget(latitude, longitude, altitude)
+        mapVisibility = true
+    }
+
+    MapView { id: mapView
         width: mainRect.width
         height: mainRect.height
+        visible: mapVisibility
+
+        Component.onCompleted: {
+            target.connect(mainRect.target)
+        }
     }
 }

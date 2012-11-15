@@ -15,10 +15,29 @@ Rectangle { id: mainRect
 
     signal characterModeChanged(string mode);
     signal textSelected(string text)
+    signal back()
+    signal ok(double latitude, double longitude, double altitude, double name)
 
     color: "transparent"
     width: 400
     height: 400
+
+    function setTextFields(latitude, longitude, altitude, name) {
+        inputA.text = latitude
+        inputB.text = longitude
+        inputC.text = altitude
+        inputD.text = name
+
+        if(inputA.textInputFocus) {
+            textSelected(inputA.text)
+        } else if(inputB.textInputFocus) {
+            textSelected(inputB.text)
+        } else if(inputC.textInputFocus) {
+            textSelected(inputC.text)
+        } else if(inputD.textInputFocus) {
+            textSelected(inputD.text)
+        }
+    }
 
     function setActiveText(text) {
         if(inputA.textInputFocus) {
@@ -202,12 +221,18 @@ Rectangle { id: mainRect
                 height: buttonSize()
 
                 buttonText: "<="
+                onClicked: {
+                    mainRect.back()
+                }
             }
             Button2 {
                 width: buttonSize()
                 height: buttonSize()
 
                 buttonText: "OK"
+                onClicked: {
+                    mainRect.ok(inputA.text, inputB.text, inputC.text, inputD.text)
+                }
             }
         }
     }

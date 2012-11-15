@@ -13,9 +13,46 @@ Rectangle { id: mainRect
     width: 800
     height: 400
 
+    signal target(double latitude, double longitude, double altitude)
+
     // Iserlohn - Germany
-    property double centerLatitude: 51.381111
-    property double centerLongitude: 7.695556
+    //    property Coordinate centerPosition: Coordinate {
+    //        latitude: 51.381111
+    //        longitude: 7.695556
+    //        altitude: 0
+    //    }
+
+    // Berlin - Germany
+    property Coordinate centerPosition: Coordinate {
+        latitude: 52.50568190
+        longitude: 13.32320270
+        altitude: 4.89739200
+    }
+
+    property Coordinate currentPosition: Coordinate {
+        latitude: 52.50568190
+        longitude: 13.32320270
+        altitude: 4.89739200
+    }
+
+    property Coordinate targetPosition: Coordinate {
+        latitude: 52.3
+        longitude: 13.3
+        altitude: 0
+    }
+
+    property Coordinate positionA: Coordinate {
+        latitude: 10.0
+        longitude: 0.0
+        altitude: 0.0
+    }
+
+    property Coordinate positionB: Coordinate {
+        latitude: 10.002
+        longitude: 0.0
+        altitude: 0.0
+    }
+
     property int zoomLevel: 15
     property int meter: 0
     property double lineLength: 0
@@ -27,6 +64,13 @@ Rectangle { id: mainRect
 
     property int fontSize: 14
 
+    function setTarget(latitude, longitude, altitude) {
+        targetPosition.latitude = latitude
+        targetPosition.longitude = longitude
+        targetPosition.altitude = altitude
+        adjustPositions()
+    }
+
     function distance(xA, yA, xB, yB) {
         var xD = xB - xA
         var yD = yB - yA
@@ -34,16 +78,19 @@ Rectangle { id: mainRect
     }
 
     function adjustPositions() {
-        currentPositionX = map.toScreenPosition(positionSource.position.coordinate).x
-        currentPositionY = map.toScreenPosition(positionSource.position.coordinate).y
+        currentPositionX = map.toScreenPosition(currentPosition).x
+        currentPositionY = map.toScreenPosition(currentPosition).y
+
+        targetPositionX = map.toScreenPosition(targetPosition).x
+        targetPositionY = map.toScreenPosition(targetPosition).y
 
         // Scale
-        var coordDistance = coordA.distanceTo(coordB)
+        var coordDistance = positionA.distanceTo(positionB)
         console.log("coordDistance: " + coordDistance)
-        var screenDistance = distance(map.toScreenPosition(coordA).x,
-                                      map.toScreenPosition(coordA).y,
-                                      map.toScreenPosition(coordB).x,
-                                      map.toScreenPosition(coordB).y)
+        var screenDistance = distance(map.toScreenPosition(positionA).x,
+                                      map.toScreenPosition(positionA).y,
+                                      map.toScreenPosition(positionB).x,
+                                      map.toScreenPosition(positionB).y)
         console.log("screenDistance: " + screenDistance)
         var pixelPerMeter = screenDistance / coordDistance
         console.log("pixelPerMeter: " + pixelPerMeter)
@@ -61,9 +108,6 @@ Rectangle { id: mainRect
         target: Qt.application
         onActiveChanged: {
             if (Qt.application.active) {
-                var currentCoord = positionSource.position.coordinate
-                currentCoord.latitude = mainRect.centerLatitude
-                currentCoord.longitude = mainRect.centerLongitude
                 adjustPositions()
                 positionSource.start()
             } else
@@ -78,10 +122,11 @@ Rectangle { id: mainRect
         anchors.fill: parent
 
         center: Coordinate {
-            latitude: mainRect.centerLatitude
-            longitude: mainRect.centerLongitude
+            latitude: centerPosition.latitude
+            longitude: centerPosition.longitude
         }
 
+        // Current position
         Rectangle {
             width: 20
             height: width
@@ -91,6 +136,18 @@ Rectangle { id: mainRect
             radius: width * 0.5
             x: currentPositionX - width / 2
             y: currentPositionY - width / 2
+        }
+
+        // Target position
+        Rectangle {
+            width: 20
+            height: width
+            color: "green"
+            border.color: "black"
+            border.width: 1
+            radius: width * 0.5
+            x: targetPositionX - width / 2
+            y: targetPositionY - width / 2
         }
 
         // Scale
@@ -112,7 +169,7 @@ Rectangle { id: mainRect
 
     // Target
     Rectangle { id: targetRect
-        width: 200
+        width: 60
         height: 20 // 100
         color: "white"
         border.color: "black"
@@ -133,99 +190,10 @@ Rectangle { id: mainRect
         MouseArea { id: mouseArea
             anchors.fill: parent
 
-            onClicked: {
-                console.log("click")
-            }
-
             onPressed: {
-                console.log("press")
-            }
-
-            onReleased: {
-                console.log("release")
+                target(targetPosition.latitude, targetPosition.longitude, targetPosition.altitude)
             }
         }
-
-        //        Column {
-        //            Row {
-        //                Text {
-        //                    width: targetRect.width
-        //                    height: fontSize
-        //                    horizontalAlignment: Text.AlignHCenter
-        //                    font.pixelSize: fontSize
-        //                    text: "Target"
-        //                }
-        //            }
-        //            Row {
-        //                Text {
-        //                    font.pixelSize: fontSize
-        //                    text: "Latitude"
-        //                }
-        //            }
-        //            Row {
-        //                Rectangle { id: textInputRectA
-        //                    width: targetRect.width
-        //                    height: fontSize + 2
-        //                    border.color: "black"
-        //                    TextInput {
-        //                        width: textInputRectA.width - 10
-        //                        height: textInputRectA.height
-        //                        anchors.horizontalCenter: parent.horizontalCenter
-        //                        font.pixelSize: fontSize
-        //                        text: "ww"
-        //                    }
-        //                }
-        //            }
-        //            Row {
-        //                Text {
-        //                    font.pixelSize: fontSize
-        //                    text: "Longitude"
-        //                }
-        //            }
-        //            Row {
-        //                Rectangle { id: textInputRectB
-        //                    width: targetRect.width
-        //                    height: fontSize + 2
-        //                    border.color: "black"
-        //                    TextInput {
-        //                        width: textInputRectA.width - 10
-        //                        height: textInputRectA.height
-        //                        anchors.horizontalCenter: parent.horizontalCenter
-        //                        font.pixelSize: fontSize
-        //                        text: "ww"
-        //                    }
-        //                }
-        //            }
-        //            Row {
-        //                Rectangle { id: button
-        //                    width: targetRect.width
-        //                    height: fontSize
-
-        //                    Text { id: text
-        //                        text: "OK"
-        //                        anchors.centerIn: parent
-        //                        font.pixelSize: fontSize
-        //                        horizontalAlignment: Text.AlignHCenter
-        //                    }
-
-        //                    MouseArea { id: mouseArea
-        //                        anchors.fill: parent
-
-        //                        onClicked: {
-        //                            console.log("click")
-        //                        }
-
-        //                        onPressed: {
-        //                            console.log("press")
-        //                        }
-
-        //                        onReleased: {
-        //                            console.log("release")
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        }
     }
 
     //! Source for retrieving the positioning information
@@ -243,22 +211,14 @@ Rectangle { id: mainRect
 
     function updateGeoInfo() {
         var currentCoord = positionSource.position.coordinate
-        centerLatitude = currentCoord.latitude
-        centerLongitude = currentCoord.longitude
-    }
+        centerPosition.latitude = currentCoord.latitude
+        centerPosition.longitude = currentCoord.longitude
+        centerPosition.altitude = currentCoord.altitude
 
-    Coordinate { id: coordA
-        latitude: 10.0
-        longitude: 0.0
-        altitude: 0.0
+        currentPosition.latitude = currentCoord.latitude
+        currentPosition.longitude = currentCoord.longitude
+        currentPosition.altitude = currentCoord.altitude
     }
-
-    Coordinate { id: coordB
-        latitude: 10.002
-        longitude: 0.0
-        altitude: 0.0
-    }
-
 
     PinchArea { id: pincharea
         property double __oldZoom
