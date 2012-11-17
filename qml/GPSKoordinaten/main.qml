@@ -51,7 +51,7 @@ Rectangle { id: mainRect
         }
     }
 
-    function target(latitude, longitude, altitude) {
+    function setTarget(latitude, longitude, altitude) {
         inputFields.setTextFields(latitude, longitude, altitude, "")
         mapVisibility = false
     }
@@ -71,7 +71,7 @@ Rectangle { id: mainRect
         visible: mapVisibility
 
         Component.onCompleted: {
-            target.connect(mainRect.target)
+            target.connect(mainRect.setTarget)
         }
     }
 }

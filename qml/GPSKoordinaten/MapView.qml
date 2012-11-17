@@ -15,30 +15,25 @@ Rectangle { id: mainRect
 
     signal target(double latitude, double longitude, double altitude)
 
-    // Iserlohn - Germany
-    //    property Coordinate centerPosition: Coordinate {
-    //        latitude: 51.381111
-    //        longitude: 7.695556
-    //        altitude: 0
-    //    }
 
-    // Berlin - Germany
     property Coordinate centerPosition: Coordinate {
-        latitude: 52.50568190
-        longitude: 13.32320270
-        altitude: 4.89739200
+        latitude: (currentPosition.latitude + targetPosition.latitude) / 2.0
+        longitude: (currentPosition.longitude + targetPosition.longitude) / 2.0
+        altitude: 0.0
     }
 
+    // Berlin - Germany
     property Coordinate currentPosition: Coordinate {
         latitude: 52.50568190
         longitude: 13.32320270
-        altitude: 4.89739200
+        altitude: 0.0
     }
 
+    // Iserlohn - Germany
     property Coordinate targetPosition: Coordinate {
-        latitude: 52.3
-        longitude: 13.3
-        altitude: 0
+        latitude: 51.381111
+        longitude: 7.695556
+        altitude: 0.0
     }
 
     property Coordinate positionA: Coordinate {
@@ -53,7 +48,6 @@ Rectangle { id: mainRect
         altitude: 0.0
     }
 
-    property int zoomLevel: 15
     property int meter: 0
     property double lineLength: 0
 
@@ -64,11 +58,22 @@ Rectangle { id: mainRect
 
     property int fontSize: 14
 
+    Component.onCompleted: {
+        setTarget(targetPosition.latitude, targetPosition.longitude, targetPosition.altitude)
+    }
+
     function setTarget(latitude, longitude, altitude) {
         targetPosition.latitude = latitude
         targetPosition.longitude = longitude
         targetPosition.altitude = altitude
+
+        // Optimize zoom level
+        map.zoomLevel = map.maximumZoomLevel
         adjustPositions()
+        while(map.zoomLevel > map.minimumZoomLevel && (currentPositionX < 0 || currentPositionY < 0 || targetPositionX < 0 || targetPositionY < 0)) {
+            map.zoomLevel--
+            adjustPositions()
+        }
     }
 
     function distance(xA, yA, xB, yB) {
@@ -117,13 +122,31 @@ Rectangle { id: mainRect
 
     Map { id: map
         plugin: Plugin { name: "nokia" }
-        zoomLevel: mainRect.zoomLevel
+        zoomLevel: 15
         mapType: Map.StreetMap
         anchors.fill: parent
 
         center: Coordinate {
             latitude: centerPosition.latitude
             longitude: centerPosition.longitude
+        }
+
+//        MapCircle {
+//            center: centerPosition
+//            radius: 20
+//            color: "blue"
+//        }
+
+        // Line
+        Rectangle {
+            width: distance(currentPositionX, currentPositionY, targetPositionX, targetPositionY)
+            height: 3
+            color: "red"
+            transform: Rotation {
+                axis { x: 0; y: 0; z: 1 } angle: Math.atan2(currentPositionY - targetPositionY, currentPositionX - targetPositionX) * 180 / Math.PI;
+            }
+            x: targetPositionX
+            y: targetPositionY
         }
 
         // Current position
@@ -211,10 +234,6 @@ Rectangle { id: mainRect
 
     function updateGeoInfo() {
         var currentCoord = positionSource.position.coordinate
-        centerPosition.latitude = currentCoord.latitude
-        centerPosition.longitude = currentCoord.longitude
-        centerPosition.altitude = currentCoord.altitude
-
         currentPosition.latitude = currentCoord.latitude
         currentPosition.longitude = currentCoord.longitude
         currentPosition.altitude = currentCoord.altitude
