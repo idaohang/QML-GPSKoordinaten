@@ -90,6 +90,31 @@ Rectangle { id: mainRect
         return Math.sqrt(xD * xD + yD * yD)
     }
 
+    function formatDistace(distance) {
+        var unit = "m"
+        if(distance >= 1000) {
+            unit = "km"
+            distance /= 1000
+        }
+
+        var strDistance = new String(distance)
+        var pointPosition = strDistance.indexOf(".")
+        if (pointPosition >= 0) {
+            return strDistance.substring(0, strDistance.indexOf(".") + 3) + unit
+        } else {
+            return strDistance + unit
+        }
+    }
+
+    function zeroTail(meter) {
+        var strMeter = new String(meter)
+        meter = strMeter.charAt(0)
+        for(var i = 1; i < strMeter.length; i++) {
+            meter += "0"
+        }
+        return meter
+    }
+
     function adjustPositions() {
         currentPositionX = map.toScreenPosition(currentPosition).x
         currentPositionY = map.toScreenPosition(currentPosition).y
@@ -99,18 +124,18 @@ Rectangle { id: mainRect
 
         // Scale
         var coordDistance = positionA.distanceTo(positionB)
-//        console.log("coordDistance: " + coordDistance)
+        //        console.log("coordDistance: " + coordDistance)
         var screenDistance = distance(map.toScreenPosition(positionA).x,
                                       map.toScreenPosition(positionA).y,
                                       map.toScreenPosition(positionB).x,
                                       map.toScreenPosition(positionB).y)
-//        console.log("screenDistance: " + screenDistance)
+        //        console.log("screenDistance: " + screenDistance)
         var pixelPerMeter = screenDistance / coordDistance
-//        console.log("pixelPerMeter: " + pixelPerMeter)
+        //        console.log("pixelPerMeter: " + pixelPerMeter)
         meter = (mainRect.width / 2.0) / pixelPerMeter
-        meter = meter - (meter % 100)
+        meter = zeroTail(meter)
         lineLength = pixelPerMeter * meter
-//        console.log("lineLength: " + lineLength)
+        //        console.log("lineLength: " + lineLength)
     }
 
     //! We stop retrieving position information when component is to be destroyed
@@ -139,11 +164,11 @@ Rectangle { id: mainRect
             longitude: centerPosition.longitude
         }
 
-//        MapCircle {
-//            center: centerPosition
-//            radius: 20
-//            color: "blue"
-//        }
+        //        MapCircle {
+        //            center: centerPosition
+        //            radius: 20
+        //            color: "blue"
+        //        }
 
         // Line
         Rectangle {
@@ -181,10 +206,26 @@ Rectangle { id: mainRect
             y: targetPositionY - width / 2
         }
 
+        // Distance
+        Text {
+            color: "black"
+            text: "Distance: " + formatDistace(currentPosition.distanceTo(targetPosition))
+            x: 5
+            y: 5
+        }
+
+        // Bearing
+        function calculateBearing() {
+            var y = Math.sin(dLon) * Math.cos(lat2);
+            var x = Math.cos(lat1)*Math.sin(lat2) -
+                    Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
+            var brng = Math.atan2(y, x).toDeg();
+        }
+
         // Scale
         Text {
             color: "black"
-            text: meter + "m"
+            text: formatDistace(meter)
             x: mainRect.width - lineLength - 10
             y: mainRect.height - 35
         }
