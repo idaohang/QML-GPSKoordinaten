@@ -24,7 +24,7 @@ void NumberEdit::setText(QString text) {
 //    editorText = text.remove(QRegExp("_"));
     editorText = text;
     emit textChanged(editorText);
-    qDebug(qPrintable(editorText));
+//    qDebug(qPrintable(editorText));
 }
 
 void NumberEdit::addText(QString text) {

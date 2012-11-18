@@ -62,6 +62,13 @@ Rectangle { id: mainRect
         setTarget(targetPosition.latitude, targetPosition.longitude, targetPosition.altitude)
     }
 
+    function toCenter() {
+        var dx = (mainRect.width / 2.0) - map.toScreenPosition(centerPosition).x
+        var dy = (mainRect.height / 2.0) - map.toScreenPosition(centerPosition).y
+        console.log(dx + ", " + dy)
+        map.pan(-dx, -dy)
+    }
+
     function setTarget(latitude, longitude, altitude) {
         targetPosition.latitude = latitude
         targetPosition.longitude = longitude
@@ -69,6 +76,7 @@ Rectangle { id: mainRect
 
         // Optimize zoom level
         map.zoomLevel = map.maximumZoomLevel
+        toCenter()
         adjustPositions()
         while(map.zoomLevel > map.minimumZoomLevel && (currentPositionX < 0 || currentPositionY < 0 || targetPositionX < 0 || targetPositionY < 0)) {
             map.zoomLevel--
@@ -91,18 +99,18 @@ Rectangle { id: mainRect
 
         // Scale
         var coordDistance = positionA.distanceTo(positionB)
-        console.log("coordDistance: " + coordDistance)
+//        console.log("coordDistance: " + coordDistance)
         var screenDistance = distance(map.toScreenPosition(positionA).x,
                                       map.toScreenPosition(positionA).y,
                                       map.toScreenPosition(positionB).x,
                                       map.toScreenPosition(positionB).y)
-        console.log("screenDistance: " + screenDistance)
+//        console.log("screenDistance: " + screenDistance)
         var pixelPerMeter = screenDistance / coordDistance
-        console.log("pixelPerMeter: " + pixelPerMeter)
+//        console.log("pixelPerMeter: " + pixelPerMeter)
         meter = (mainRect.width / 2.0) / pixelPerMeter
         meter = meter - (meter % 100)
         lineLength = pixelPerMeter * meter
-        console.log("lineLength: " + lineLength)
+//        console.log("lineLength: " + lineLength)
     }
 
     //! We stop retrieving position information when component is to be destroyed
