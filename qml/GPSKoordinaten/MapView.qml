@@ -36,18 +36,6 @@ Rectangle { id: mainRect
         altitude: 0.0
     }
 
-    property Coordinate positionA: Coordinate {
-        latitude: 10.0
-        longitude: 0.0
-        altitude: 0.0
-    }
-
-    property Coordinate positionB: Coordinate {
-        latitude: 10.002
-        longitude: 0.0
-        altitude: 0.0
-    }
-
     property int meter: 0
     property double lineLength: 0
 
@@ -55,6 +43,9 @@ Rectangle { id: mainRect
     property int currentPositionY: 0
     property int targetPositionX: 0
     property int targetPositionY: 0
+
+    property double distance: 0
+    property double bearing: 0
 
     property int fontSize: 14
 
@@ -65,7 +56,7 @@ Rectangle { id: mainRect
     function toCenter() {
         var dx = (mainRect.width / 2.0) - map.toScreenPosition(centerPosition).x
         var dy = (mainRect.height / 2.0) - map.toScreenPosition(centerPosition).y
-        console.log(dx + ", " + dy)
+        //        console.log(dx + ", " + dy)
         map.pan(-dx, -dy)
     }
 
@@ -84,10 +75,22 @@ Rectangle { id: mainRect
         }
     }
 
-    function distance(xA, yA, xB, yB) {
+    function calculateDistance(xA, yA, xB, yB) {
+        console.log("Vars " + xA + " " + yA + " " + xB + " " + yB)
         var xD = xB - xA
         var yD = yB - yA
+        console.log("Dist " + xD + " " + yD)
         return Math.sqrt(xD * xD + yD * yD)
+    }
+
+    function formatNumber(number) {
+        var strNumber = new String(number)
+        var pointPosition = strNumber.indexOf(".")
+        if (pointPosition >= 0) {
+            return strNumber.substring(0, strNumber.indexOf(".") + 3)
+        } else {
+            return strNumber
+        }
     }
 
     function formatDistace(distance) {
@@ -96,14 +99,7 @@ Rectangle { id: mainRect
             unit = "km"
             distance /= 1000
         }
-
-        var strDistance = new String(distance)
-        var pointPosition = strDistance.indexOf(".")
-        if (pointPosition >= 0) {
-            return strDistance.substring(0, strDistance.indexOf(".") + 3) + unit
-        } else {
-            return strDistance + unit
-        }
+        return formatNumber(distance) + unit
     }
 
     function zeroTail(meter) {
@@ -115,6 +111,15 @@ Rectangle { id: mainRect
         return meter
     }
 
+    // Return Bearing (degrees)
+    function calculateBearing(lat1, lon1, lat2, lon2)
+    {
+        var dLon = lon2 - lon1;
+        var y = Math.sin(dLon) * Math.cos(lat2);
+        var x = Math.cos(lat1)*Math.sin(lat2)-Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
+        return (180.0/Math.PI) * Math.atan2(y, x);
+    }
+
     function adjustPositions() {
         currentPositionX = map.toScreenPosition(currentPosition).x
         currentPositionY = map.toScreenPosition(currentPosition).y
@@ -122,20 +127,28 @@ Rectangle { id: mainRect
         targetPositionX = map.toScreenPosition(targetPosition).x
         targetPositionY = map.toScreenPosition(targetPosition).y
 
+        // Distance
+        distance = currentPosition.distanceTo(targetPosition)
+
+        // Bearing
+        bearing = calculateBearing(targetPosition.latitude, targetPosition.longitude, currentPosition.latitude, currentPosition.longitude)
+
         // Scale
-        var coordDistance = positionA.distanceTo(positionB)
-        //        console.log("coordDistance: " + coordDistance)
-        var screenDistance = distance(map.toScreenPosition(positionA).x,
-                                      map.toScreenPosition(positionA).y,
-                                      map.toScreenPosition(positionB).x,
-                                      map.toScreenPosition(positionB).y)
-        //        console.log("screenDistance: " + screenDistance)
+        var coordDistance = currentPosition.distanceTo(targetPosition)
+        console.log("coordDistance: " + coordDistance)
+        var screenPositionA = map.toScreenPosition(currentPosition)
+        var screenPositionB = map.toScreenPosition(targetPosition)
+        var screenDistance = calculateDistance(screenPositionA.x,
+                                               screenPositionA.y,
+                                               screenPositionB.x,
+                                               screenPositionB.y)
+        console.log("screenDistance: " + screenDistance)
         var pixelPerMeter = screenDistance / coordDistance
-        //        console.log("pixelPerMeter: " + pixelPerMeter)
+        console.log("pixelPerMeter: " + pixelPerMeter)
         meter = (mainRect.width / 2.0) / pixelPerMeter
         meter = zeroTail(meter)
         lineLength = pixelPerMeter * meter
-        //        console.log("lineLength: " + lineLength)
+        console.log("lineLength: " + lineLength)
     }
 
     //! We stop retrieving position information when component is to be destroyed
@@ -172,7 +185,7 @@ Rectangle { id: mainRect
 
         // Line
         Rectangle {
-            width: distance(currentPositionX, currentPositionY, targetPositionX, targetPositionY)
+            width: calculateDistance(currentPositionX, currentPositionY, targetPositionX, targetPositionY)
             height: 3
             color: "red"
             transform: Rotation {
@@ -209,17 +222,17 @@ Rectangle { id: mainRect
         // Distance
         Text {
             color: "black"
-            text: "Distance: " + formatDistace(currentPosition.distanceTo(targetPosition))
+            text: "Distance: " + formatDistace(distance)
             x: 5
             y: 5
         }
 
         // Bearing
-        function calculateBearing() {
-            var y = Math.sin(dLon) * Math.cos(lat2);
-            var x = Math.cos(lat1)*Math.sin(lat2) -
-                    Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
-            var brng = Math.atan2(y, x).toDeg();
+        Text {
+            color: "black"
+            text: "Bearing: " + formatNumber(bearing)
+            x: 5
+            y: 25
         }
 
         // Scale
