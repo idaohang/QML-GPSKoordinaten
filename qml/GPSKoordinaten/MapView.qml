@@ -15,7 +15,6 @@ Rectangle { id: mainRect
 
     signal target(double latitude, double longitude, double altitude)
 
-
     property Coordinate centerPosition: Coordinate {
         latitude: (currentPosition.latitude + targetPosition.latitude) / 2.0
         longitude: (currentPosition.longitude + targetPosition.longitude) / 2.0
@@ -56,7 +55,6 @@ Rectangle { id: mainRect
     function toCenter() {
         var dx = (mainRect.width / 2.0) - map.toScreenPosition(centerPosition).x
         var dy = (mainRect.height / 2.0) - map.toScreenPosition(centerPosition).y
-        //        console.log(dx + ", " + dy)
         map.pan(-dx, -dy)
     }
 
@@ -76,10 +74,8 @@ Rectangle { id: mainRect
     }
 
     function calculateDistance(xA, yA, xB, yB) {
-        console.log("Vars " + xA + " " + yA + " " + xB + " " + yB)
         var xD = xB - xA
         var yD = yB - yA
-        console.log("Dist " + xD + " " + yD)
         return Math.sqrt(xD * xD + yD * yD)
     }
 
@@ -112,8 +108,7 @@ Rectangle { id: mainRect
     }
 
     // Return Bearing (degrees)
-    function calculateBearing(lat1, lon1, lat2, lon2)
-    {
+    function calculateBearing(lat1, lon1, lat2, lon2) {
         var dLon = lon2 - lon1;
         var y = Math.sin(dLon) * Math.cos(lat2);
         var x = Math.cos(lat1)*Math.sin(lat2)-Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
