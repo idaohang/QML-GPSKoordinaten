@@ -58,12 +58,8 @@ Rectangle { id: mainRect
         map.pan(-dx, -dy)
     }
 
-    function setTarget(latitude, longitude, altitude) {
-        targetPosition.latitude = latitude
-        targetPosition.longitude = longitude
-        targetPosition.altitude = altitude
-
-        // Optimize zoom level
+    // Optimize zoom level
+    function optimizeZoom() {
         map.zoomLevel = map.maximumZoomLevel
         toCenter()
         adjustPositions()
@@ -71,6 +67,14 @@ Rectangle { id: mainRect
             map.zoomLevel--
             adjustPositions()
         }
+    }
+
+    function setTarget(latitude, longitude, altitude) {
+        targetPosition.latitude = latitude
+        targetPosition.longitude = longitude
+        targetPosition.altitude = altitude
+
+        optimizeZoom()
     }
 
     function calculateDistance(xA, yA, xB, yB) {
@@ -108,6 +112,8 @@ Rectangle { id: mainRect
     }
 
     // Return Bearing (degrees)
+    // http://www.movable-type.co.uk/scripts/latlong.html
+    // http://gis.stackexchange.com/questions/14670/how-to-calculate-bearing-between-two-gps-points
     function calculateBearing(lat1, lon1, lat2, lon2) {
         var dLon = lon2 - lon1;
         var y = Math.sin(dLon) * Math.cos(lat2);
@@ -294,6 +300,8 @@ Rectangle { id: mainRect
         currentPosition.latitude = currentCoord.latitude
         currentPosition.longitude = currentCoord.longitude
         currentPosition.altitude = currentCoord.altitude
+
+        optimizeZoom()
     }
 
     PinchArea { id: pincharea
