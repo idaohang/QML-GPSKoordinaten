@@ -30,8 +30,8 @@ Rectangle { id: mainRect
 
     // Iserlohn - Germany
     property Coordinate targetPosition: Coordinate {
-        latitude: 51.381111
-        longitude: 7.695556
+        latitude: 51.38
+        longitude: 7.69
         altitude: 0.0
     }
 
