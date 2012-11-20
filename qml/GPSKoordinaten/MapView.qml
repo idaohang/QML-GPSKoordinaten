@@ -25,7 +25,7 @@ Rectangle { id: mainRect
     property Coordinate currentPosition: Coordinate {
         latitude: 52.50568190
         longitude: 13.32320270
-        altitude: 0.0
+        altitude: 4.89739200
     }
 
     // Iserlohn - Germany
@@ -228,10 +228,10 @@ Rectangle { id: mainRect
             y: 5
         }
 
-        // Bearing
+        // Bearing / Direction
         Text {
             color: "black"
-            text: "Bearing: " + formatNumber(bearing)
+            text: "Direction: " + formatNumber(bearing)
             x: 5
             y: 25
         }
@@ -286,7 +286,7 @@ Rectangle { id: mainRect
     PositionSource { id: positionSource
 
         //! Desired interval between updates in milliseconds
-        updateInterval: 10000
+        updateInterval: 1000
         active: true
 
         //! When position changed, update the location strings
@@ -297,11 +297,15 @@ Rectangle { id: mainRect
 
     function updateGeoInfo() {
         var currentCoord = positionSource.position.coordinate
-        currentPosition.latitude = currentCoord.latitude
-        currentPosition.longitude = currentCoord.longitude
-        currentPosition.altitude = currentCoord.altitude
+        if(currentPosition.latitude !== currentCoord.latitude ||
+                currentPosition.longitude !== currentCoord.longitude ||
+                currentPosition.altitude !== currentCoord.altitude) {
+            currentPosition.latitude = currentCoord.latitude
+            currentPosition.longitude = currentCoord.longitude
+            currentPosition.altitude = currentCoord.altitude
 
-        optimizeZoom()
+            optimizeZoom()
+        }
     }
 
     PinchArea { id: pincharea
